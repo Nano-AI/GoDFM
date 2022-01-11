@@ -131,7 +131,7 @@ func main() {
 		case "-s", "--sort":
 			sort()
 			break
-		case "-p", "--p":
+		case "-p", "--print":
 			printPaths()
 			break
 		case "-r", "--remove":
