@@ -88,15 +88,6 @@ func getData() Paths {
 }
 
 func add(pattern, toPath string) {
-	f, err := os.OpenFile("settings.json", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0644)
-	if err != nil {
-		log.Fatal(err)
-	}
-	_, err = f.Write([]byte("{\"paths\":[]}"))
-	if err != nil {
-		log.Fatal(err)
-	}
-	f.Close()
 	dir, err := os.Stat(toPath)
 	if err != nil || !dir.IsDir() {
 		fmt.Printf("\"%s\" is not a valid directory\n", toPath)
@@ -126,6 +117,15 @@ func printPaths() {
 }
 
 func main() {
+	f, err := os.OpenFile("settings.json", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_, err = f.Write([]byte("{\"paths\":[]}"))
+	if err != nil {
+		log.Fatal(err)
+	}
+	f.Close()
 	if len(os.Args) == 1 {
 		sort()
 	}
