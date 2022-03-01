@@ -20,21 +20,24 @@ type Paths struct {
 	Paths []Path `json:"paths"`
 }
 
+
 func sort() {
+	sep := string(os.PathSeparator)
 	paths := getData()
 	dirname, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)
 	}
-	sortFolder := dirname + "\\Downloads"
+	sortFolder := dirname + sep + "Downloads"
 	fmt.Println(sortFolder)
 	items, _ := ioutil.ReadDir(sortFolder)
 	for _, item := range items {
-		fmt.Println(item.Name())
+		// fmt.Println(item.Name())
 		if !item.IsDir() {
-			oldLocation := sortFolder + "\\" + item.Name()
-			newLocation := sortFolder + "\\" + item.Name()
+			oldLocation := sortFolder + sep + item.Name()
+			newLocation := sortFolder + sep + item.Name()
 			for i := 0; i < len(paths.Paths); i++ {
+				fmt.Printf("Checking for %s...\n", paths.Paths[i].Pattern);
 				match, _ := regexp.MatchString(paths.Paths[i].Pattern, item.Name())
 				if match {
 					newLocation = paths.Paths[i].ToPath + "/" + item.Name()
@@ -121,7 +124,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = f.Write([]byte("{\"paths\":[]}"))
+	if file, _ := os.Stat("settings.json"); file.Size() == 0 {
+		_, err = f.Write([]byte("{\"paths\":[]}"))
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
